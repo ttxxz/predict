@@ -244,11 +244,13 @@ def get_args(pred_config):
 
 def load_model(pred_config, args, device):
     # Check whether model exists
+    args.data_dir = pred_config.root_path + 'data'
     if not os.path.exists(pred_config.model_dir):
         raise Exception("Model doesn't exists! Train first!")
 
     try:
-        model = MODEL_CLASSES[args.model_type][1].from_pretrained(args.model_dir,
+        print("args.model_dir {}".format(pred_config.model_dir))
+        model = MODEL_CLASSES[args.model_type][1].from_pretrained(pred_config.model_dir,
                                                                   args=args,
                                                                   intent_label_lst=get_intent_labels(args),
                                                                   slot_label_lst=get_slot_labels(args))
@@ -455,10 +457,11 @@ if __name__ == "__main__":
 
     parser.add_argument("-i", "--input_data", default="On April first I need a flight going; I would like a flight, I would like a flight from Orlando to Salt Lake City for April First on Delta airlines", type=str, help="Input file for prediction")
     parser.add_argument("-o", "--output_file", default="sample_pred_out.txt", type=str, help="Output file for prediction")
-    parser.add_argument("-m", "--model_dir", default="./model", type=str, help="Path to save, load model")
+    parser.add_argument("-m", "--model_dir", default="D:/gw/workspace/ke_bo_bei/model/", type=str, help="Path to save, load model")
 
     parser.add_argument("-b", "--batch_size", default=32, type=int, help="Batch size for prediction")
     parser.add_argument("-c", "--no_cuda", action="store_true", help="Avoid using CUDA when available")
+    parser.add_argument("-r", "--root_path", default="./", help="root path")
 
     pred_config = parser.parse_args()
     predict(pred_config)
